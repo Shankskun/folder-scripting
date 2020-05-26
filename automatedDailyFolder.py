@@ -1,16 +1,27 @@
-import csv
-import os
+import csv, os
+# import pandas as pd
 from datetime import date
+
+### Functions
+def createFolder(directory):
+    try:
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+    except OSError:
+        print('Error: Unable to create Directory ->' + directory)
+
+
+
+### Main
 
 # Change this for different directories
 path = "C:\\Users\\shaunsoong\\Desktop\\test"
 os.chdir(path)
 
 # Make folder
-new_folder = "Marcus"
-os.makedirs(new_folder)
+createFolder("yo")
 
-print("hellow")
+
 
 
 
@@ -24,18 +35,11 @@ print("hellow")
 # tomorrow=str(today.replace(day=d+1))
 # print(tomorrow)
 
-# def createFolder(directory):
-#     try:
-#         if not os.path.exists(directory):
-#             os.makedirs(directory)
-#     except OSError:
-#         print('Error: Creating directory. ' + directory)
 
 # def findFile(name, path):
 #     for root, dirs, files in os.walk(path):
 #         if name in files:
 #             return os.path.join(root, name)
-
 
 # with open('schedule.csv', newline="", encoding='utf-8') as f:
 #     reader = csv.reader(f)
