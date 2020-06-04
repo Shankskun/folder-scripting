@@ -1,24 +1,24 @@
 import os
-import csv
 import pandas as pd
-from datetime import date
-
 # Custom Functions
-from supportFunc import createFolder, createDirectories, folderDay
+from supportFunc import createFolder, createDirectories, folderDay, findCsvFilenames
 
 ### Main ---------------
 
 # Read Airtable CSV
-df = pd.read_csv('timetable.csv')
+# CHANGE THIS
+path = 'C:\\Users\\shaunsoong\\Documents\\GitHub\\folder-scripting'
+result = findCsvFilenames(path)
+df = pd.read_csv(result[0])
 
-# Change this for different directories
+# CHANGE THIS
 path = "C:\\Users\\shaunsoong\\Desktop\\test"
 os.chdir(path)
 
 # Make daily folders based on date
-whichDay = input("[ENTER] for today's Daily Folder, [1] for tomorrow's folder:")
+print("[" + result[0] + "] has been used")
+whichDay = input("press [ENTER] for today's Daily Folder, [1] for tomorrow's folder:")
 day = folderDay(whichDay)
-
 
 createFolder(day)
 
@@ -26,58 +26,5 @@ createFolder(day)
 os.chdir(path + "\\" + day)
 createDirectories(df)
 
+# Add PPTs into each folder
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# teacher_list = teacher.values.tolist()
-# topic = trainData.iloc[:, 3]
-# teacher_listclean = list(set(teacher_list))
-# print(teacher_listclean)
-# i=0
-# while i<len(teacher_listclean):
-#     os.makedirs(teacher_listclean[i])
-#     i = i+1
-# teacher = trainData.iloc[:, 3]
-
-
-
-
-
-### --------------------------------------------------- ###
-
-
-# today = date.today()
-# d = today.day
-# tomorrow=str(today.replace(day=d+1))
-# print(tomorrow)
-
-
-# def findFile(name, path):
-#     for root, dirs, files in os.walk(path):
-#         if name in files:
-#             return os.path.join(root, name)
-
-# with open('schedule.csv', newline="", encoding='utf-8') as f:
-#     reader = csv.reader(f)
-#     os.chdir("Y:/000Daily folders")
-#     createFolder(tomorrow)
-#     os.chdir("Y:/000Daily folders/" + tomorrow)
-#     for row in reader:
-#         teacher = row[5]
-#         #createFolder(teacher)
-#         topic = str(row[4].strip())
-#         new_topic = "".join(topic.split())
-#         file = findFile("ZHFLS_G4_03_Lily the Cat_L2.ppt", "Y:/0 标准化课件")
-#         #print(repr(new_topic))

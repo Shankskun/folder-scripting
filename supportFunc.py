@@ -4,10 +4,11 @@ from datetime import date
 
 import pandas as pd
 
+
 ### Functions ---------------
 
 def folderDay(enteredDay):
-    if(enteredDay == ''):
+    if (enteredDay == ''):
         day = date.today()
         day = str(day)
     else:
@@ -44,3 +45,8 @@ def createDirectories(df):
             createFolder(str(i))
 
     return 0
+
+
+def findCsvFilenames(path_to_dir, suffix=".csv"):
+    filenames = os.listdir(path_to_dir)
+    return [filename for filename in filenames if filename.endswith(suffix)]
