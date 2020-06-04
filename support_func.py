@@ -2,9 +2,6 @@ import os
 import datetime
 from datetime import date
 
-import pandas as pd
-
-
 ### Functions ---------------
 
 def folderDay(enteredDay):
