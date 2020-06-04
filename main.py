@@ -1,9 +1,10 @@
 import os
+import shutil
 import pandas as pd
 
 # Custom Functions
-from supportFunc import createFolder, createDirectories, folderDay
-from checkFunc import checkCsv
+from support_func import create_folder, create_directories, folder_day, search
+from check_func import checkCsv
 
 ### Main ---------------
 
@@ -17,16 +18,20 @@ df = pd.read_csv(result)
 path = "C:\\Users\\shaunsoong\\Desktop\\test"
 os.chdir(path)
 
+
+
+
+
 # Make daily folders based on date
 print("[" + result + "] has been used")
 whichDay = input("press [ENTER] for today's Daily Folder, [1] for tomorrow's folder:")
-day = folderDay(whichDay)
+day = folder_day(whichDay)
 
-createFolder(day)
+create_folder(day)
 
 # Make teacher folders within today
 os.chdir(path + "\\" + day)
-createDirectories(df)
+create_directories(df)
 
 # Add PPTs into each folder
 

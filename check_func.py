@@ -1,10 +1,10 @@
 import sys
-from supportFunc import createFolder, createDirectories, folderDay, findCsvFilenames
+from support_func import create_folder, create_directories, folder_day, find_csv_filenames
 
 ### Functions ---------------
 
 def checkCsv(path):
-    result = findCsvFilenames(path)
+    result = find_csv_filenames(path)
 
     if result:
         return result[0]
