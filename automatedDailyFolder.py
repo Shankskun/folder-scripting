@@ -23,7 +23,17 @@ os.chdir(path)
 # Make folder
 createFolder("yo")
 
-
+trainData = pd.read_csv('test.csv')
+teacher = trainData.iloc[:, 4]
+teacher_list = teacher.values.tolist()
+topic = trainData.iloc[:, 3]
+teacher_listclean = list(set(teacher_list))
+print(teacher_listclean)
+i=0
+while i<len(teacher_listclean):
+    os.makedirs(teacher_listclean[i])
+    i = i+1
+teacher = trainData.iloc[:, 3]
 
 
 
