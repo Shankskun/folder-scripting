@@ -3,37 +3,33 @@ import csv
 import pandas as pd
 from datetime import date
 
+# Custom Functions
+from supportFunc import createFolder
 
-### Functions
-def createFolder(directory):
-    try:
-        if not os.path.exists(directory):
-            os.makedirs(directory)
-    except OSError:
-        print('Error: Unable to create Directory ->' + directory)
-
-
-
-### Main
+### Main ---------------
+# Read Airtable CSV
+df = pd.read_csv('timetable.csv')
 
 # Change this for different directories
 path = "C:\\Users\\shaunsoong\\Desktop\\test"
 os.chdir(path)
 
 # Make folder
-createFolder("yo")
+# createFolder("yo")
 
-trainData = pd.read_csv('test.csv')
-teacher = trainData.iloc[:, 4]
-teacher_list = teacher.values.tolist()
-topic = trainData.iloc[:, 3]
-teacher_listclean = list(set(teacher_list))
-print(teacher_listclean)
-i=0
-while i<len(teacher_listclean):
-    os.makedirs(teacher_listclean[i])
-    i = i+1
-teacher = trainData.iloc[:, 3]
+teacher = df.iloc[:, 4]
+print(df.Teacher)
+
+
+# teacher_list = teacher.values.tolist()
+# topic = trainData.iloc[:, 3]
+# teacher_listclean = list(set(teacher_list))
+# print(teacher_listclean)
+# i=0
+# while i<len(teacher_listclean):
+#     os.makedirs(teacher_listclean[i])
+#     i = i+1
+# teacher = trainData.iloc[:, 3]
 
 
 
