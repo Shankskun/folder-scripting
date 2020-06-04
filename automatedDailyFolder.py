@@ -3,6 +3,7 @@ import csv
 import pandas as pd
 from datetime import date
 
+
 ### Functions
 def createFolder(directory):
     try:
