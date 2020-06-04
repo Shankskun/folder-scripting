@@ -14,7 +14,7 @@ def folderDay(enteredDay):
         day = date.today()
         day = str(day + datetime.timedelta(days=1))
 
-
+    print(day + "'s folder has been created!")
     return day
 
 
