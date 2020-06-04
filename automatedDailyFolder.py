@@ -2,8 +2,7 @@ import os
 import csv
 import pandas as pd
 from datetime import date
-
-
+import shutil
 ### Functions
 def createFolder(directory):
     try:
@@ -12,8 +11,19 @@ def createFolder(directory):
     except OSError:
         print('Error: Unable to create Directory ->' + directory)
 
-
-
+def search(path,keyword):
+	content= os.listdir(path)
+	for each in content:
+		each_path = path+os.sep+each
+		if keyword in each:
+			print(each_path)
+		if os.path.isdir(each_path):
+			search(each_path,keyword)
+result = search(r'C:\0 标准化课件\2. inclass','BF2_U1 My School_L4_(20+20)')
+if result == "":
+	print("cannot find" + topic_list)
+else:
+	shutil.copy2(result, newpath)
 ### Main
 
 # Change this for different directories
