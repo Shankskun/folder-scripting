@@ -4,9 +4,10 @@ import pandas as pd
 from datetime import date
 
 # Custom Functions
-from supportFunc import createFolder
+from supportFunc import createDirectories
 
 ### Main ---------------
+
 # Read Airtable CSV
 df = pd.read_csv('timetable.csv')
 
@@ -14,11 +15,22 @@ df = pd.read_csv('timetable.csv')
 path = "C:\\Users\\shaunsoong\\Desktop\\test"
 os.chdir(path)
 
-# Make folder
-# createFolder("yo")
+# Make folders
+createDirectories(df)
 
-teacher = df.iloc[:, 4]
-print(df.Teacher)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # teacher_list = teacher.values.tolist()

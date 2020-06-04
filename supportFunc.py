@@ -1,7 +1,6 @@
 import os
-import csv
 import pandas as pd
-from datetime import date
+
 
 ### Functions
 def createFolder(directory):
@@ -12,3 +11,19 @@ def createFolder(directory):
         print('Error: Unable to create Directory ->' + directory)
 
 
+def getTeachers(df):
+    # get all teachers, and remove duplicates
+    teachers = df.Teacher.tolist()
+    teachers = list(dict.fromkeys(teachers))
+
+    return teachers
+
+
+def createDirectories(df):
+    # for all teachers, make a folder
+    teachers = getTeachers(df)
+
+    for i in teachers:
+        createFolder(str(i))
+
+    return 0
