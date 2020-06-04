@@ -4,7 +4,7 @@ import pandas as pd
 from datetime import date
 
 # Custom Functions
-from supportFunc import createDirectories
+from supportFunc import createFolder, createDirectories, folderDay
 
 ### Main ---------------
 
@@ -15,7 +15,15 @@ df = pd.read_csv('timetable.csv')
 path = "C:\\Users\\shaunsoong\\Desktop\\test"
 os.chdir(path)
 
-# Make folders
+# Make daily folders based on date
+whichDay = input("[ENTER] for today's Daily Folder, [1] for tomorrow's folder:")
+day = folderDay(whichDay)
+
+
+createFolder(day)
+
+# Make teacher folders within today
+os.chdir(path + "\\" + day)
 createDirectories(df)
 
 

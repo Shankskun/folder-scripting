@@ -1,8 +1,23 @@
 import os
+import datetime
+from datetime import date
+
 import pandas as pd
 
+### Functions ---------------
 
-### Functions
+def folderDay(enteredDay):
+    if(enteredDay == ''):
+        day = date.today()
+        day = str(day)
+    else:
+        day = date.today()
+        day = str(day + datetime.timedelta(days=1))
+
+
+    return day
+
+
 def createFolder(directory):
     try:
         if not os.path.exists(directory):
@@ -24,6 +39,8 @@ def createDirectories(df):
     teachers = getTeachers(df)
 
     for i in teachers:
-        createFolder(str(i))
+        # remove empty values
+        if str(i) != 'nan':
+            createFolder(str(i))
 
     return 0
