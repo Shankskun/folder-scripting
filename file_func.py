@@ -1,4 +1,5 @@
 import os
+import sys
 
 
 ### Functions ---------------
@@ -22,3 +23,19 @@ def search(path, keyword):
                 break
 
     return result
+
+
+def find_csv_filename(path_to_dir, suffix=".csv"):
+    filenames = os.listdir(path_to_dir)
+    return [filename for filename in filenames if filename.endswith(suffix)]
+
+
+def check_csv(path):
+    result = find_csv_filename(path)
+
+    # find the only CSV file within the directory
+    if result:
+        return result[0]
+
+    print("No CSV found, please place one in this folder")
+    sys.exit()

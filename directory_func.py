@@ -1,20 +1,10 @@
 import os
-import sys
 import shutil
 import datetime
 from datetime import date
 
 
 ### Functions ---------------
-
-def check_csv(path):
-    result = find_csv_filename(path)
-
-    if result:
-        return result[0]
-
-    print("No CSV found, please place one in this folder")
-    sys.exit()
 
 
 def folder_day(entered_day):
@@ -45,23 +35,23 @@ def get_teachers(df):
     return teachers
 
 
-def create_directories(df, ppt, path):
-    # for all teachers, make a folder
-    teachers = get_teachers(df)
+def create_directories(teachers, ppt, path):
 
     for i in teachers:
-        cur_dr = path
+
         # remove empty values
-        if str(i) != 'nan':
+        if str(i) != 'nan' and i != "":
             create_folder(str(i))
-            cur_dr = path + "\\" + i + "test.pptx"
-            print("cur->", (cur_dr))
-            print(ppt)
-            shutil.copyfile(ppt, cur_dr)
 
     return 0
 
 
-def find_csv_filename(path_to_dir, suffix=".csv"):
-    filenames = os.listdir(path_to_dir)
-    return [filename for filename in filenames if filename.endswith(suffix)]
+def add_ppt(teachers, src, des):
+
+    for i in teachers:
+
+        if str(i) != "nan" and str(i) != "":
+            teacher_dr = des + "\\" + str(i) + "\\" + "test.pptx"
+            shutil.copy2(src, teacher_dr)
+
+
