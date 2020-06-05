@@ -1,25 +1,33 @@
+# This Python script is created to help automate the process of placing the right
+# PowerPoint files for each respecting teacher daily at AiEnglish
+#
+# We are not responsible for any incorrect PowerPoints places
+#
+# Created by Andrea Sha, Livy Xu, Shaun Soong
+#
+# Version 1.0 Beta
+
 import os
-import shutil
 import pandas as pd
 
 # Custom Functions
-from support_func import create_folder, create_directories, folder_day, search
-from check_func import checkCsv
+from directory_func import create_folder, create_directories, folder_day, check_csv
+from file_func import search
 
 ### Main ---------------
 
 # Read Airtable CSV
 # CHANGE THIS
-path = 'C:\\Users\\shaunsoong\\Documents\\GitHub\\folder-scripting'
-result = checkCsv(path)
+path = "C:\\Users\\shaunsoong\\Documents\\GitHub\\folder-scripting"
+result = check_csv(path)
 df = pd.read_csv(result)
 
 # CHANGE THIS
 path = "C:\\Users\\shaunsoong\\Desktop\\test"
 os.chdir(path)
 
-
-
+# FIND PPT
+ppt = search(path, "ppt1")
 
 
 # Make daily folders based on date
@@ -31,7 +39,9 @@ create_folder(day)
 
 # Make teacher folders within today
 os.chdir(path + "\\" + day)
-create_directories(df)
+create_directories(df, ppt, path)
+
+
 
 # Add PPTs into each folder
 
