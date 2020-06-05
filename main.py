@@ -11,22 +11,25 @@ import os
 import pandas as pd
 
 # Custom Functions
-from directory_func import create_folder, create_directories, folder_day, get_teachers, add_ppt
-from file_func import search, check_csv
+from directory_func import create_folder, create_directories, folder_day, get_teachers
+from file_func import search, check_csv, add_ppt, copy_to_folder
 
 ### Main ---------------
 
 # CHANGE THIS
-# Read Airtable CSV
+# Read Airtable CSV, filter irrelevant columns
+root_path = "C:\\Users\\shaunsoong\\Desktop\\test"
 path = "C:\\Users\\shaunsoong\\Documents\\GitHub\\folder-scripting"
 
 airtable_csv = check_csv(path)
 df = pd.read_csv(airtable_csv)
+df = df.filter(items=["Teacher", "Topic"])
+df = df.sort_values(by=['Teacher'])
+df = df.dropna()
 
 # CHANGE THIS
 # Daily Folder Location
-path = "C:\\Users\\shaunsoong\\Desktop\\test"
-os.chdir(path)
+os.chdir(root_path)
 
 # Make daily folders based on date
 print("[" + airtable_csv + "] has been used")
@@ -37,16 +40,22 @@ create_folder(day)
 
 # Make teacher folders
 teachers = get_teachers(df)
+
+daily_folder_path = root_path + "\\" + day
+os.chdir(daily_folder_path)
+create_directories(teachers)
+
+# For each teacher, find all PPTs
+# copy_to_folder(df, root_path, daily_folder_path)
+
+
+# K2_13_Phonics Review（ucp）
+# ZHFLS_G3_Word Family_L6_at
+
+
+
 # FIND PPT
-ppt = search(path, "我们")
-
-
-daily_folder = path + "\\" + day
-os.chdir(daily_folder)
-create_directories(teachers, ppt, path)
-
-# Add PPTs into each
-print(daily_folder)
-add_ppt(teachers, ppt, daily_folder)
+# ppt = search(root_path, "我们")
+# add_ppt(teachers, ppt, daily_folder_path)
 
 

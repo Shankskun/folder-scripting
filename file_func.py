@@ -1,5 +1,6 @@
 import os
 import sys
+import shutil
 
 
 ### Functions ---------------
@@ -39,3 +40,29 @@ def check_csv(path):
 
     print("No CSV found, please place one in this folder")
     sys.exit()
+
+
+def add_ppt(topic, root, des):
+
+    for i in teachers:
+
+        if str(i) != "":
+            teacher_dr = des + "\\" + str(i) + "\\" + "test.pptx"
+            shutil.copy2(src, teacher_dr)
+
+
+def copy_to_folder(df, root, path):
+
+    cur_teacher = None
+
+    for index, row in df.iterrows():
+
+        # change teacher directory
+        if cur_teacher != row["Teacher"]:
+            cur_path = path + "\\" + row["Teacher"] + "\\" + row["Teacher"] + "\\"
+            add_ppt(row["Topic"], cur_path)
+
+        # retain the same directory
+        else:
+            add_ppt(row["Topic"])
+

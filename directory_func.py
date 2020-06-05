@@ -1,5 +1,4 @@
 import os
-import shutil
 import datetime
 from datetime import date
 
@@ -35,23 +34,17 @@ def get_teachers(df):
     return teachers
 
 
-def create_directories(teachers, ppt, path):
+def create_directories(teachers):
 
     for i in teachers:
 
         # remove empty values
-        if str(i) != 'nan' and i != "":
+        if str(i) != "":
             create_folder(str(i))
 
     return 0
 
 
-def add_ppt(teachers, src, des):
 
-    for i in teachers:
-
-        if str(i) != "nan" and str(i) != "":
-            teacher_dr = des + "\\" + str(i) + "\\" + "test.pptx"
-            shutil.copy2(src, teacher_dr)
 
 
