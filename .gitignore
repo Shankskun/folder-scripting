@@ -13,4 +13,5 @@ env.bak/
 venv.bak/
 
 # Pycharm
-.idea
+
+__pycache__
