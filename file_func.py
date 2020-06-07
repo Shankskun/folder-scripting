@@ -1,6 +1,8 @@
 import os
+import string
 import sys
 import shutil
+import io
 
 
 ### Functions ---------------
@@ -42,27 +44,50 @@ def check_csv(path):
     sys.exit()
 
 
-def add_ppt(topic, root, des):
+def missing_slides(path, teacher, topic):
 
-    for i in teachers:
+    # create new txt file and write
+    if not os.path.exists("missing_ppt.txt"):
+        f = open("missing_ppt.txt", "w+", encoding="utf-8")
+        f.write("MISSING\n\n" + teacher + "\t --> " + topic + "\n")
 
-        if str(i) != "":
-            teacher_dr = des + "\\" + str(i) + "\\" + "test.pptx"
-            shutil.copy2(src, teacher_dr)
+    # append onto existing file
+    else:
+        f = open("missing_ppt.txt", "a+", encoding="utf-8")
+        f.write(teacher + "\t --> " + topic + "\n")
+
+    f.close()
+
+
+def add_ppt(topic, src, des):
+
+    shutil.copy2(src, des + topic + ".pptx")
 
 
 def copy_to_folder(df, root, path):
+
+    # Remove missing_ppt.txt if present
+    if os.path.exists("missing_ppt.txt"):
+        os.remove("missing_ppt.txt")
 
     cur_teacher = None
 
     for index, row in df.iterrows():
 
-        # change teacher directory
-        if cur_teacher != row["Teacher"]:
-            cur_path = path + "\\" + row["Teacher"] + "\\" + row["Teacher"] + "\\"
-            add_ppt(row["Topic"], cur_path)
+        # search for PowerPoint slides
+        topic_path = search(root, row["Topic"])
 
-        # retain the same directory
+        # PowerPoint found
+        if topic_path is not None:
+
+            # Change teacher folders
+            if cur_teacher != row["Teacher"]:
+                cur_path = path + "\\" + row["Teacher"] + "\\"
+
+            # Copy PowerPoints to each respecting teacher
+            add_ppt(row["Topic"], topic_path, cur_path)
+
+        # Can't locate PowerPoint
         else:
-            add_ppt(row["Topic"])
+            missing_slides(path, row["Teacher"], row["Topic"])
 
