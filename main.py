@@ -18,16 +18,18 @@ from file_func import check_csv, copy_to_folder
 
 # CHANGE THIS
 # Read Airtable CSV, filter irrelevant columns
-root_path = "C:\\Users\\shaunsoong\\Desktop\\test"
+root_path = "C:\\Users\\shaunsoong\\Desktop\\test"          # Presentation Folder on dc01
 path = "C:\\Users\\shaunsoong\\Documents\\GitHub\\folder-scripting"
 
 airtable_csv = check_csv(path)
 df = pd.read_csv(airtable_csv)
 df = df.filter(items=["Teacher", "Topic"])
-df = df.sort_values(by=['Teacher'])
+df = df.sort_values(by=["Teacher"])
 df = df.dropna()
 
-# CHANGE THIS
+# remove CSV used
+# os.remove(airtable_csv)
+
 # Daily Folder Location
 os.chdir(root_path)
 
@@ -48,6 +50,4 @@ create_directories(teachers)
 # For each teacher, find all PPTs
 copy_to_folder(df, root_path, daily_folder_path)
 
-#
-
-
+# End of File

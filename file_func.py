@@ -1,8 +1,6 @@
 import os
-import string
 import sys
 import shutil
-import io
 
 
 ### Functions ---------------
