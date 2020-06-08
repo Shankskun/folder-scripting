@@ -18,8 +18,10 @@ from file_func import check_csv, copy_to_folder
 
 # CHANGE THIS
 # Read Airtable CSV, filter irrelevant columns
-root_path = "C:\\Users\\shaunsoong\\Desktop\\test"          # Presentation Folder on dc01
-path = "C:\\Users\\shaunsoong\\Documents\\GitHub\\folder-scripting"
+root_path = "C:\\Users\\livy.xu\\Desktop\\test"          # Presentation Folder on dc01
+path = "C:\\Users\\livy.xu\\Documents\\GitHub\\folder-scripting"
+daily_folder_path = "C:\\Users\\livy.xu\\Desktop\\dailyfolder"
+
 
 airtable_csv = check_csv(path)
 df = pd.read_csv(airtable_csv)

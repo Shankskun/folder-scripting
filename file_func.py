@@ -1,7 +1,7 @@
 import os
 import sys
 import shutil
-
+import directory_func
 
 ### Functions ---------------
 
@@ -73,6 +73,11 @@ def copy_to_folder(df, root, path):
     for index, row in df.iterrows():
 
         # search for PowerPoint slides
+
+        try:
+            os.makedirs(row["Teacher"]+"//"+row["Topic"])
+        except OSError:
+            print('Error: Unable to create Directory ->' + row["Teacher"]+"//"+row["Topic"])
         topic_path = search(root, row["Topic"])
 
         # PowerPoint found
