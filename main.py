@@ -50,6 +50,6 @@ os.chdir(daily_folder_path)
 create_directories(teachers)
 
 # For each teacher, find all PPTs
-copy_to_folder(df, root_path, daily_folder_path)
+copy_to_folder(df, r'Y:\0 标准化课件\2. inclass', daily_folder_path)
 
 # End of File

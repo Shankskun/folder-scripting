@@ -57,6 +57,13 @@ def missing_slides(path, teacher, topic):
     f.close()
 
 
+def standard_topic(topic):
+    topic = topic.replace('/', ';')
+    topic = topic.replace(':', ' ')
+    topic = topic.replace("\n", "")
+    topic = topic.replace("\r", "")
+    return topic
+
 def add_ppt(topic, src, des):
 
     shutil.copy2(src, des + topic + ".pptx")
@@ -73,19 +80,20 @@ def copy_to_folder(df, root, path):
     for index, row in df.iterrows():
 
         # search for PowerPoint slides
-
         try:
-            os.makedirs(row["Teacher"]+"//"+row["Topic"])
+            topic10 = standard_topic(row["Topic"])
+            Path10 = os.path.join(path,row["Teacher"],topic10)
+            os.makedirs(Path10)
         except OSError:
             print('Error: Unable to create Directory ->' + row["Teacher"]+"//"+row["Topic"])
-        topic_path = search(root, row["Topic"])
 
+        topic_path = search(root, row["Topic"]+'.pptx')
         # PowerPoint found
         if topic_path is not None:
 
             # Change teacher folders
             if cur_teacher != row["Teacher"]:
-                cur_path = path + "\\" + row["Teacher"] + "\\"
+                cur_path = path + "\\" + row["Teacher"] + "\\" + topic10 + "\\"
 
             # Copy PowerPoints to each respecting teacher
             add_ppt(row["Topic"], topic_path, cur_path)
@@ -93,4 +101,5 @@ def copy_to_folder(df, root, path):
         # Can't locate PowerPoint
         else:
             missing_slides(path, row["Teacher"], row["Topic"])
+
 
