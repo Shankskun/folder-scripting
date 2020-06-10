@@ -1,7 +1,7 @@
 import os
 import sys
 import shutil
-import directory_func
+from directory_func import create_folder
 
 ### Functions ---------------
 
@@ -20,7 +20,7 @@ def search(path, keyword):
             result = search(each_path, keyword)
             # File found, break all loops
             if result is not None:
-                result = result.replace("\\", "\\\\")
+                # result = result.replace("\\", "\\\\")
                 break
 
     return result
@@ -43,7 +43,6 @@ def check_csv(path):
 
 
 def missing_slides(path, teacher, topic):
-
     # create new txt file and write
     if not os.path.exists("missing_ppt.txt"):
         f = open("missing_ppt.txt", "w+", encoding="utf-8")
@@ -65,12 +64,10 @@ def standard_topic(topic):
     return topic
 
 def add_ppt(topic, src, des):
-
     shutil.copy2(src, des + topic + ".pptx")
 
 
 def copy_to_folder(df, root, path):
-
     # Remove missing_ppt.txt if present
     if os.path.exists("missing_ppt.txt"):
         os.remove("missing_ppt.txt")
@@ -87,6 +84,9 @@ def copy_to_folder(df, root, path):
         except OSError:
             print('Error: Unable to create Directory ->' + row["Teacher"]+"//"+row["Topic"])
 
+        topic_path = search(root, row["Topic"])
+
+
         topic_path = search(root, row["Topic"]+'.pptx')
         # PowerPoint found
         if topic_path is not None:
@@ -96,10 +96,10 @@ def copy_to_folder(df, root, path):
                 cur_path = path + "\\" + row["Teacher"] + "\\" + topic10 + "\\"
 
             # Copy PowerPoints to each respecting teacher
-            add_ppt(row["Topic"], topic_path, cur_path)
+            create_folder(row["Topic"])
+            add_ppt(row["Topic"], topic_path, cur_path + "\\" + row["Topic"])
 
         # Can't locate PowerPoint
         else:
             missing_slides(path, row["Teacher"], row["Topic"])
-
 
