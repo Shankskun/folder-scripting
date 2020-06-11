@@ -28,7 +28,7 @@ df = df.sort_values(by=["Teacher"])
 df = df.dropna()
 
 # remove CSV used
-# os.remove(airtable_csv)
+os.remove(airtable_csv)
 
 # Daily Folder Location
 os.chdir(root_path)

@@ -96,7 +96,6 @@ def copy_to_folder(df, root, path):
                 cur_path = path + "\\" + row["Teacher"] + "\\" + topic10 + "\\"
 
             # Copy PowerPoints to each respecting teacher
-            create_folder(row["Topic"])
             add_ppt(row["Topic"], topic_path, cur_path + "\\" + row["Topic"])
 
         # Can't locate PowerPoint
