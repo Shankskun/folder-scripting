@@ -57,14 +57,15 @@ def missing_slides(path, teacher, topic):
 
 
 def standard_topic(topic):
-    topic = topic.replace('/', ';')
-    topic = topic.replace(':', ' ')
+    topic = topic.replace("/", ";")
+    topic = topic.replace(":", "")
     topic = topic.replace("\n", "")
     topic = topic.replace("\r", "")
+
     return topic
 
-def add_ppt(topic, src, des):
-    shutil.copy2(src, des + topic + ".pptx")
+def add_ppt(src, des):
+    shutil.copy2(src, des + ".pptx")
 
 
 def copy_to_folder(df, root, path):
@@ -74,29 +75,31 @@ def copy_to_folder(df, root, path):
 
     cur_teacher = None
 
+    print("Loading in progress: ")
+
     for index, row in df.iterrows():
+        print("=", end="")
 
         # search for PowerPoint slides
         try:
-            topic10 = standard_topic(row["Topic"])
-            Path10 = os.path.join(path,row["Teacher"],topic10)
-            os.makedirs(Path10)
+            time = standard_topic(row["Au time"])
+            time_path = os.path.join(path, row["Teacher"], time)
+            os.makedirs(time_path)
         except OSError:
-            print('Error: Unable to create Directory ->' + row["Teacher"]+"//"+row["Topic"])
-
-        topic_path = search(root, row["Topic"])
-
+            print('Error: Unable to create Directory ->' + row["Teacher"]+ "//" + row["Topic"])
 
         topic_path = search(root, row["Topic"]+'.pptx')
+
         # PowerPoint found
         if topic_path is not None:
 
             # Change teacher folders
             if cur_teacher != row["Teacher"]:
-                cur_path = path + "\\" + row["Teacher"] + "\\" + topic10 + "\\"
+                cur_path = path + "\\" + row["Teacher"] + "\\" + time
 
             # Copy PowerPoints to each respecting teacher
-            add_ppt(row["Topic"], topic_path, cur_path + "\\" + row["Topic"])
+            topic = standard_topic(row["Topic"])
+            add_ppt(topic_path, cur_path + "\\" + topic)
 
         # Can't locate PowerPoint
         else:

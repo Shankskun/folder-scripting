@@ -5,7 +5,7 @@
 #
 # Created by Andrea Sha, Livy Xu, Shaun Soong
 #
-# Version 1.0 Beta
+# Version 1.1 Beta
 
 import os
 import pandas as pd
@@ -16,23 +16,22 @@ from file_func import check_csv, copy_to_folder
 
 ### Main ---------------
 
-# CHANGE THIS
 # Read Airtable CSV, filter irrelevant columns
-root_path = "C:\\Users\\livy.xu\\Desktop\\test" # Presentation Folder on dc01
-path = "C:\\Users\\livy.xu\\Documents\\GitHub\\folder-scripting"    # Daily Folder
+code_path= "C:\\Users\\shaunsoong\\Documents\\GitHub\\folder-scripting"     # Code & CSV
+src_path = "\\\\10.0.99.99\\ppt\\Presentation\\0 标准化课件\\2. inclass"      # PowerPoint Source
+des_path = "\\\\10.0.99.99\\ppt\\Presentation\\000Daily folders"   # Daily Folder
 
-airtable_csv = check_csv(path)
+airtable_csv = check_csv(code_path)
 df = pd.read_csv(airtable_csv)
-df = df.filter(items=["Teacher", "Topic"])
+df = df.filter(items=["Teacher", "Topic", "Au time"])
 df = df.sort_values(by=["Teacher"])
 df = df.dropna()
 
 # remove CSV used
-os.remove(airtable_csv)
+# os.remove(airtable_csv)
 
 # Daily Folder Location
-os.chdir(root_path)
-
+os.chdir(des_path)
 
 # Make daily folders based on date
 print("[" + airtable_csv + "] has been used")
@@ -44,11 +43,11 @@ create_folder(day)
 # Make teacher folders
 teachers = get_teachers(df)
 
-daily_folder_path = root_path + "\\" + day
+daily_folder_path = des_path + "\\" + day
 os.chdir(daily_folder_path)
 create_directories(teachers)
 
 # For each teacher, find all PPTs
-copy_to_folder(df, r'Y:\0 标准化课件\2. inclass', daily_folder_path)
+copy_to_folder(df, src_path, daily_folder_path)
 
 # End of File
