@@ -11,8 +11,8 @@ def folder_day(entered_day):
         day = date.today()
         day = str(day)
     else:
-        day = date.today()
-        day = str(day + datetime.timedelta(days=1))
+        day = datetime.datetime(date.today().year, date.today().month, int(entered_day))
+        day = str(day.strftime('%d-%b-%Y'))
 
     print(day + "'s folder has been created!")
     return day

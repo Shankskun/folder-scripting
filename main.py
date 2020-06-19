@@ -5,7 +5,7 @@
 #
 # Created by Andrea Sha, Livy Xu, Shaun Soong
 #
-# Version 1.1 Beta
+# Version 1.2 Beta (updated 19/6/2020)
 
 import os
 import pandas as pd
@@ -20,6 +20,7 @@ from file_func import check_csv, copy_to_folder
 code_path= "C:\\Users\\shaunsoong\\Documents\\GitHub\\folder-scripting"     # Code & CSV
 src_path = "\\\\10.0.99.99\\ppt\\Presentation\\0 标准化课件\\2. inclass"      # PowerPoint Source
 des_path = "\\\\10.0.99.99\\ppt\\Presentation\\000Daily folders"   # Daily Folder
+# des_path = "C:\\Users\\shaunsoong\\Desktop\\Test"   # Daily Folder
 
 airtable_csv = check_csv(code_path)
 df = pd.read_csv(airtable_csv)
@@ -28,14 +29,14 @@ df = df.sort_values(by=["Teacher"])
 df = df.dropna()
 
 # remove CSV used
-# os.remove(airtable_csv)
+os.remove(airtable_csv)
 
 # Daily Folder Location
 os.chdir(des_path)
 
 # Make daily folders based on date
 print("[" + airtable_csv + "] has been used")
-whichDay = input("press [ENTER] for today's Daily Folder, [1] for tomorrow's folder:")
+whichDay = input("press [ENTER] for TODAY, or type in the day (ie '23' for 23-month) :")
 
 day = folder_day(whichDay)
 create_folder(day)

@@ -42,16 +42,16 @@ def check_csv(path):
     sys.exit()
 
 
-def missing_slides(path, teacher, topic):
+def missing_slides(teacher, topic, time):
     # create new txt file and write
     if not os.path.exists("missing_ppt.txt"):
         f = open("missing_ppt.txt", "w+", encoding="utf-8")
-        f.write("MISSING\n\n" + teacher + "\t --> " + topic + "\n")
+        f.write("MISSING\n\n" + teacher + ":\t" + time + "--> " + topic + "\n")
 
     # append onto existing file
     else:
         f = open("missing_ppt.txt", "a+", encoding="utf-8")
-        f.write(teacher + "\t --> " + topic + "\n")
+        f.write(teacher + ":\t" + time + "--> " + topic + "\n")
 
     f.close()
 
@@ -86,7 +86,7 @@ def copy_to_folder(df, root, path):
             time_path = os.path.join(path, row["Teacher"], time)
             os.makedirs(time_path)
         except OSError:
-            print('Error: Unable to create Directory ->' + row["Teacher"]+ "//" + row["Topic"])
+            print('Error: Unable to create Directory ->' + row["Teacher"] + "//" + row["Topic"])
 
         topic_path = search(root, row["Topic"]+'.pptx')
 
@@ -103,5 +103,5 @@ def copy_to_folder(df, root, path):
 
         # Can't locate PowerPoint
         else:
-            missing_slides(path, row["Teacher"], row["Topic"])
+            missing_slides(row["Teacher"], row["Topic"], time)
 
