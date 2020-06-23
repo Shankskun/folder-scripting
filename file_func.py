@@ -1,7 +1,7 @@
 import os
 import sys
 import shutil
-from directory_func import create_folder
+
 
 ### Functions ---------------
 
@@ -13,19 +13,18 @@ def search(path, keyword):
     for each in content:
         each_path = path + os.sep + each
 
-        # Redundant folders
-        if each == "Previews" or each == "Demo 体验课":
-            break
         # File found, get directory path
         if keyword in each:
             result = each_path
             return result
         # Recurse
         if os.path.isdir(each_path):
-            result = search(each_path, keyword)
-            # File found, break all loops
-            if result is not None:
-                break
+            # not redundant folders
+            if each != "Previews" and each != "Demo 体验课":
+                result = search(each_path, keyword)
+                # File found, break all loops
+                if result is not None:
+                    break
 
     return result
 
@@ -73,27 +72,11 @@ def add_ppt(src, des):
     shutil.copy2(src, des + ".pptx")
 
 
-# Print iterations progress
-def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█', printEnd = "\r"):
-    """
-    Call in a loop to create terminal progress bar
-    @params:
-        iteration   - Required  : current iteration (Int)
-        total       - Required  : total iterations (Int)
-        prefix      - Optional  : prefix string (Str)
-        suffix      - Optional  : suffix string (Str)
-        decimals    - Optional  : positive number of decimals in percent complete (Int)
-        length      - Optional  : character length of bar (Int)
-        fill        - Optional  : bar fill character (Str)
-        printEnd    - Optional  : end character (e.g. "\r", "\r\n") (Str)
-    """
-    percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
-    filledLength = int(length * iteration // total)
-    bar = fill * filledLength + '-' * (length - filledLength)
-    print(f'\r{prefix} |{bar}| {percent}% {suffix}', end = printEnd)
-    # Print New Line on Complete
-    if iteration == total:
-        print()
+def strip_end(text, suffix):
+    if not text.endswith(suffix):
+        return None
+    return text[:len(text)-len(suffix)]
+
 
 def copy_to_folder(df, root, path):
     # Remove missing_ppt.txt if present
@@ -125,8 +108,6 @@ def copy_to_folder(df, root, path):
         # PowerPoint found
         if topic_path is not None:
 
-            # guide_path = search(root, row["Topic"] + '.docx')
-
             # Change teacher folders
             if cur_teacher != row["Teacher"]:
                 # cur_path = path + "\\" + row["Teacher"] + "\\" + time
@@ -134,6 +115,13 @@ def copy_to_folder(df, root, path):
 
             # Copy PowerPoints to each respecting teacher
             add_ppt(topic_path, cur_path + "\\" + topic)
+
+            # # Find Lesson plan (docx)
+            # doc_path = strip_end(topic_path, topic + ".pptx")
+            # doc_path = search(root, row["Topic"] + ".docx")
+            #
+            # if doc_path is not None:
+            #     add_ppt(doc_path, cur_path + "\\" + topic)
 
         # Can't locate PowerPoint
         else:
