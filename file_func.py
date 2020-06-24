@@ -79,7 +79,6 @@ def copy_to_folder(df, root, path):
         os.remove("missing_ppt.txt")
 
     cur_teacher = None
-    topic_path = None
 
     print("Loading in progress: ")
 
@@ -104,13 +103,8 @@ def copy_to_folder(df, root, path):
                 # PowerPoint found
                 if topic_path is not None:
 
-                    # Change teacher folders
-                    if cur_teacher != row["Teacher"]:
-                        # cur_path = path + "\\" + row["Teacher"] + "\\" + time
-                        cur_path = path + "\\" + row["Teacher"] + "\\" + topic
-
                     # Copy PowerPoints to each respecting teacher
-                    add_ppt(topic_path, cur_path + "\\" + topic)
+                    add_ppt(topic_path, inner_path + "\\" + topic)
 
                     # # Find Lesson plan (docx)
                     # doc_path = strip_end(topic_path, topic + ".pptx")
