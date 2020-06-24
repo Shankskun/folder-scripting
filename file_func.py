@@ -1,6 +1,7 @@
 import os
 import sys
 import shutil
+from directory_func import create_folder
 
 
 ### Functions ---------------
@@ -72,18 +73,13 @@ def add_ppt(src, des):
     shutil.copy2(src, des + ".pptx")
 
 
-def strip_end(text, suffix):
-    if not text.endswith(suffix):
-        return None
-    return text[:len(text)-len(suffix)]
-
-
 def copy_to_folder(df, root, path):
     # Remove missing_ppt.txt if present
     if os.path.exists("missing_ppt.txt"):
         os.remove("missing_ppt.txt")
 
     cur_teacher = None
+    topic_path = None
 
     print("Loading in progress: ")
 
@@ -91,39 +87,41 @@ def copy_to_folder(df, root, path):
         print("=", end="")
 
         # Directory for sub folders
+        time = standard_topic(row["Au time"])
+        topic = standard_topic(row["Topic"])
+
+        inner_path = os.path.join(path, row["Teacher"], topic)
+        # inner_path = os.path.join(path, row["Teacher"], time)
+
+        create_folder(inner_path)
+
+        # if directory is empty
         try:
-            time = standard_topic(row["Au time"])
-            topic = standard_topic(row["Topic"])
+            if not os.listdir(inner_path):
+                # search for PowerPoint slides
+                topic_path = search(root, row["Topic"] + ".pptx")
 
-            time_path = os.path.join(path, row["Teacher"], topic)
-            # time_path = os.path.join(path, row["Teacher"], time)
-            os.makedirs(time_path)
+                # PowerPoint found
+                if topic_path is not None:
+
+                    # Change teacher folders
+                    if cur_teacher != row["Teacher"]:
+                        # cur_path = path + "\\" + row["Teacher"] + "\\" + time
+                        cur_path = path + "\\" + row["Teacher"] + "\\" + topic
+
+                    # Copy PowerPoints to each respecting teacher
+                    add_ppt(topic_path, cur_path + "\\" + topic)
+
+                    # # Find Lesson plan (docx)
+                    # doc_path = strip_end(topic_path, topic + ".pptx")
+                    # doc_path = search(root, row["Topic"] + ".docx")
+                    #
+                    # if doc_path is not None:
+                    #     add_ppt(doc_path, cur_path + "\\" + topic)
+
+                # Can't locate PowerPoint
+                else:
+                    missing_slides(row["Teacher"], row["Topic"], time)
+
         except OSError:
-            # print('Error: Unable to create Directory ->' + row["Teacher"] + "//" + row["Topic"])
-            print("=", end="")
-
-        # search for PowerPoint slides
-        topic_path = search(root, row["Topic"]+'.pptx')
-
-        # PowerPoint found
-        if topic_path is not None:
-
-            # Change teacher folders
-            if cur_teacher != row["Teacher"]:
-                # cur_path = path + "\\" + row["Teacher"] + "\\" + time
-                cur_path = path + "\\" + row["Teacher"] + "\\" + topic
-
-            # Copy PowerPoints to each respecting teacher
-            add_ppt(topic_path, cur_path + "\\" + topic)
-
-            # # Find Lesson plan (docx)
-            # doc_path = strip_end(topic_path, topic + ".pptx")
-            # doc_path = search(root, row["Topic"] + ".docx")
-            #
-            # if doc_path is not None:
-            #     add_ppt(doc_path, cur_path + "\\" + topic)
-
-        # Can't locate PowerPoint
-        else:
-            missing_slides(row["Teacher"], row["Topic"], time)
-
+            print("error checking inner folder")
