@@ -9,11 +9,10 @@ from datetime import date
 def folder_day(entered_day):
     if entered_day == '':
         day = date.today()
-        day = str(day)
     else:
         day = datetime.datetime(date.today().year, date.today().month, int(entered_day))
-        day = str(day.strftime('%d-%b-%Y'))
 
+    day = str(day.strftime('%d-%b-%Y'))
     print(day + "'s folder has been created!")
     return day
 

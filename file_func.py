@@ -14,11 +14,11 @@ def search(path, keyword):
     for each in content:
         each_path = path + os.sep + each
 
-        # File found, get directory path
-        if keyword in each:
+        # File or folder found, get directory path
+        if keyword in each and not (each.endswith(".docx") or each.endswith(".doc")):
             result = each_path
             return result
-        # Recurse
+        # Recurse deeper into each folder
         if os.path.isdir(each_path):
             # not redundant folders
             if each != "Previews" and each != "Demo 体验课":
@@ -69,16 +69,34 @@ def standard_topic(topic):
     return topic
 
 
-def add_ppt(src, des):
-    shutil.copy2(src, des + ".pptx")
+def copytree(src, dst, topic, symlinks=False, ignore=None):
+
+    if not os.path.isdir(src) and src.endswith(".pptx"):
+        temp = "\\" + topic + ".pptx"
+        shutil.copy2(src, dst + temp)
+
+    else:
+        for item in os.listdir(src):
+            s = os.path.join(src, item)
+            d = os.path.join(dst, item)
+            if os.path.isdir(s):
+                shutil.copytree(s, d, symlinks, ignore)
+            else:
+                shutil.copy2(s, d)
+
+
+def add_ppt(src, des, topic):
+    try:
+        copytree(src, des, topic)
+
+    except OSError:
+        print("\npotential error ->", des)
 
 
 def copy_to_folder(df, root, path):
     # Remove missing_ppt.txt if present
     if os.path.exists("missing_ppt.txt"):
         os.remove("missing_ppt.txt")
-
-    cur_teacher = None
 
     print("Loading in progress: ")
 
@@ -89,33 +107,44 @@ def copy_to_folder(df, root, path):
         time = standard_topic(row["Au time"])
         topic = standard_topic(row["Topic"])
 
+        # Teacher Directory
         inner_path = os.path.join(path, row["Teacher"], topic)
-        # inner_path = os.path.join(path, row["Teacher"], time)
 
-        create_folder(inner_path)
+        # Find all PowerPoint and Lesson Plan
+        topic_path = search(root, row["Topic"])
 
-        # if directory is empty
-        try:
-            if not os.listdir(inner_path):
-                # search for PowerPoint slides
-                topic_path = search(root, row["Topic"] + ".pptx")
+        # PowerPoint found
+        if topic_path is not None:
 
-                # PowerPoint found
-                if topic_path is not None:
+            # Copy PowerPoints to each respecting teacher
+            # add_ppt(topic_path, inner_path + "\\" + topic)
+            create_folder(inner_path)
+            add_ppt(topic_path, inner_path, topic)
 
-                    # Copy PowerPoints to each respecting teacher
-                    add_ppt(topic_path, inner_path + "\\" + topic)
+        # Can't locate PowerPoint
+        else:
+            inner_path = os.path.join(path, row["Teacher"], "MISSING " + topic)
+            create_folder(inner_path)
+            missing_slides(row["Teacher"], row["Topic"], time)
 
-                    # # Find Lesson plan (docx)
-                    # doc_path = strip_end(topic_path, topic + ".pptx")
-                    # doc_path = search(root, row["Topic"] + ".docx")
-                    #
-                    # if doc_path is not None:
-                    #     add_ppt(doc_path, cur_path + "\\" + topic)
+    print("\nProgram completed\n")
 
-                # Can't locate PowerPoint
-                else:
-                    missing_slides(row["Teacher"], row["Topic"], time)
-
-        except OSError:
-            print("error checking inner folder")
+    # # if directory is empty
+    # try:
+    #     if not os.listdir(inner_path):
+    #         # search for PowerPoint slides
+    #         # topic_path = search(root, row["Topic"] + ".pptx")
+    #         topic_path = search(root, row["Topic"])
+    #
+    #         # PowerPoint found
+    #         if topic_path is not None:
+    #
+    #             # Copy PowerPoints to each respecting teacher
+    #             add_ppt(topic_path, inner_path + "\\" + topic)
+    #
+    #         # Can't locate PowerPoint
+    #         else:
+    #             missing_slides(row["Teacher"], row["Topic"], time)
+    #
+    # except OSError:
+    #     print("error checking inner folder")
