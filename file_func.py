@@ -15,7 +15,7 @@ def search(path, keyword):
         each_path = path + os.sep + each
 
         # File or folder found, get directory path
-        if keyword in each and not (each.endswith(".docx") or each.endswith(".doc")):
+        if keyword == each and not (each.endswith(".docx") or each.endswith(".doc")):
             result = each_path
             return result
         # Recurse deeper into each folder
