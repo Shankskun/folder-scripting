@@ -11,9 +11,31 @@ def search(path, keyword):
     content = os.listdir(path)
     result = None  # if no file is found
 
+    keyword = keyword.replace(" ", "").replace("_", "").replace("-", "")
+    keyword = keyword.replace("（", "(").replace("）", ")")
+    keyword = keyword.replace("V4.0", "").replace("V4.0", "")
+    def vdect(each):
+        m = [i for i in range(10)]
+        n = [i for i in range(10)]
+        version = []
+        for i in range(10):
+            for j in range(10):
+                version.append(f'V{i}.{j}')
+        for elem in version:
+            if elem in each:
+                each.replace(elem, '')
+            else:
+                pass
     for each in content:
+
         each_path = path + os.sep + each
 
+        # remove all spaces and chinese characters
+        each = each.replace(" ", "").replace("_", "").replace("-", "")
+        each = each.replace("（", "(").replace("）", ")")
+        each = each.replace("V4.0", "").replace("V4.0", "")
+        each = each.replace(".pptx", "").replace("°Ø", "").replace("’", '')
+        # each = vdect(each)
         # File or folder found, get directory path
         if keyword == each and not (each.endswith(".docx") or each.endswith(".doc")):
             result = each_path
@@ -21,7 +43,7 @@ def search(path, keyword):
         # Recurse deeper into each folder
         if os.path.isdir(each_path):
             # not redundant folders
-            if each != "Previews" and each != "Demo 体验课":
+            if each != "Previews" and each != "Demo体验课":
                 result = search(each_path, keyword)
                 # File found, break all loops
                 if result is not None:
