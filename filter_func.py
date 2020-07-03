@@ -1,7 +1,8 @@
 ### Global Var ---------------
 
-non_allowed_char = [" ", "_", "-", "(", ")", "（", "）", ":", "~", ".pptx", "°Ø", "’", "©", "®", "£", "+", "+"]
-
+non_allowed_char = [" ", "_", "-", "(", ")", "（", "）", ":", "~", ".pptx",
+                    "°Ø", "’", "©", "®", "£", "+", "+", "：", ": ", " ", " "]
+  
 n = [i for i in range(10)]
 m = n.copy()
 lst = []
@@ -34,7 +35,9 @@ def sytaxdect(name):
     if name[-1] == '.':
         return name[:-1]
     name = name.upper()
-    name.replace("COLOR", "COLOUR")
+    name = name.replace("COLOR", "COLOUR")
+    name = name.replace("  ", '')
+    name = name.replace(" ", '')
     return name
 
 

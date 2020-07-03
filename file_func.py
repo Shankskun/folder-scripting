@@ -113,7 +113,7 @@ def copy_to_folder(df, root, path):
         filter_topic = standardise(filter_topic)
         filter_topic = vdetect(filter_topic)
         filter_topic = sytaxdect(filter_topic)
-        print(filter_topic)
+        # print(filter_topic)
         topic_path = search(root, filter_topic)
 
         # PowerPoint found
@@ -125,7 +125,7 @@ def copy_to_folder(df, root, path):
 
         # Can't locate PowerPoint
         else:
-            print("HOHO", inner_path)
+            # print("HOHO", inner_path)
             inner_path = os.path.join(path, row["Teacher"], "MISSING " + topic)
             create_folder(inner_path)
             missing_slides(row["Teacher"], row["Topic"], time)
