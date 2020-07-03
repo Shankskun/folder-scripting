@@ -1,6 +1,6 @@
 ### Global Var ---------------
 
-non_allowed_char = [" ", "_", "-", "(", ")", "（", "）", ":", "~", ".pptx", "°Ø", "’", "©", "®", "£"]
+non_allowed_char = [" ", "_", "-", "(", ")", "（", "）", ":", "~", ".pptx", "°Ø", "’", "©", "®", "£", "+", "+"]
 
 n = [i for i in range(10)]
 m = n.copy()
@@ -17,7 +17,6 @@ def vdetect(name):
     for i in range(4, len(name)):
         elem = name[i - 4: i]
         if elem in lst:
-            # print(10)
             name = name[:i - 4] + name[i:]
     return name
 
@@ -34,7 +33,8 @@ def numberdect(name):
 def sytaxdect(name):
     if name[-1] == '.':
         return name[:-1]
-
+    name = name.upper()
+    name.replace("COLOR", "COLOUR")
     return name
 
 

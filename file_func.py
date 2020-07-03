@@ -16,9 +16,9 @@ def search(path, keyword):
         each_path = path + os.sep + each
 
         # remove all spaces and chinese characters
+        each = numberdect(each)
         each = standardise(each)
         each = vdetect(each)
-        each = numberdect(each)
         each = sytaxdect(each)
 
         # File or folder found, get directory path
@@ -109,9 +109,10 @@ def copy_to_folder(df, root, path):
         inner_path = os.path.join(path, row["Teacher"], topic)
 
         # Filter all invalid chars, find all PowerPoint and Lesson Plan
-        filter_topic = standardise(topic)
-        filter_topic = sytaxdect(filter_topic)
+        filter_topic = numberdect(topic)
+        filter_topic = standardise(filter_topic)
         filter_topic = vdetect(filter_topic)
+        filter_topic = sytaxdect(filter_topic)
         print(filter_topic)
         topic_path = search(root, filter_topic)
 
