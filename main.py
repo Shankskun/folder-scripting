@@ -3,9 +3,9 @@
 #
 # We are not responsible for any incorrect PowerPoints placed
 #
-# Created by Andrea Sha, Livy Xu, Shaun Soong
+# Created by Andrea Sha, Livy Xu, Shaun Soong, Will Mao
 #
-# Version 1.6 Beta (updated 2/7/2020)
+# Version 2.0 Beta (updated 3/7/2020)
 
 import os
 import pandas as pd
