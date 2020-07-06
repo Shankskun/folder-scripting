@@ -102,7 +102,7 @@ def copy_to_folder(df, root, path):
         print("=", end="")
 
         # Directory for sub folders
-        topic = row["Topic"].replace(":", "").replace("\\", "").replace("/", "").replace(";", "")
+        topic = row["Topic"].replace(":", "").replace("\\", "").replace("/", "").replace(";", "").replace('\n', '').replace('\t', '')
         time = row["Au time"].replace(":", "").replace("\\", "").replace("/", "").replace(";", "")
 
         # Teacher Directory
