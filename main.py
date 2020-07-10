@@ -5,7 +5,7 @@
 #
 # Created by Andrea Sha, Livy Xu, Shaun Soong, Will Mao
 #
-# Version 2.0 Beta (updated 3/7/2020)
+# Version 2.1 Beta (updated 10/7/2020)
 
 import os
 import pandas as pd
@@ -17,9 +17,10 @@ from file_func import check_csv, copy_to_folder
 ### Main ---------------
 
 # Read Airtable CSV, filter irrelevant columns
-code_path= "/Users/jiajunmao/Documents/GitHub/folder-scripting"     # Code & CSV
-src_path = "/Volumes/PPT/0 标准化课件"                       # PowerPoint Source
-des_path = "/Volumes/PPT/Presentation/000Daily folders"   # Daily Folder
+code_path= "C:\\Users\\shaunsoong\\Documents\\GitHub\\folder-scripting"     # Code & CSV
+src_path = "\\\\10.0.99.99\\ppt\\0 标准化课件\\2. inclass"      # PowerPoint Source
+# des_path = "\\\\10.0.99.99\\ppt\\Presentation\\000Daily folders"   # Daily Folder
+des_path = "C:\\Users\\shaunsoong\\Desktop\\Test"   # Daily Folder
 
 airtable_csv = check_csv(code_path)
 df = pd.read_csv(airtable_csv)
@@ -43,7 +44,7 @@ create_folder(day)
 # Make teacher folders
 teachers = get_teachers(df)
 
-daily_folder_path = des_path + "/" + day
+daily_folder_path = des_path + "\\" + day
 os.chdir(daily_folder_path)
 create_directories(teachers)
 

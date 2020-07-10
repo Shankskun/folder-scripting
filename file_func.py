@@ -7,7 +7,7 @@ from filter_func import vdetect, numberdect, sytaxdect, standardise
 ### Functions ---------------
 
 
-def search(path, keyword):
+def search(path, keyword, type):
     content = os.listdir(path)
     result = None  # if no file is found
 
@@ -22,14 +22,15 @@ def search(path, keyword):
         each = sytaxdect(each)
 
         # File or folder found, get directory path
-        if keyword == each and not (each.endswith(".docx") or each.endswith(".doc")):
+        # if keyword == each and not (each.endswith(".docx") or each.endswith(".doc")):
+        if keyword == each and each.endswith(type):
             result = each_path
             return result
         # Recurse deeper into each folder
         if os.path.isdir(each_path):
             # not redundant folders
             if each != "Previews" and each != "Demo体验课":
-                result = search(each_path, keyword)
+                result = search(each_path, keyword, type)
                 # File found, break all loops
                 if result is not None:
                     break
@@ -113,8 +114,9 @@ def copy_to_folder(df, root, path):
         filter_topic = standardise(filter_topic)
         filter_topic = vdetect(filter_topic)
         filter_topic = sytaxdect(filter_topic)
-        # print(filter_topic)
-        topic_path = search(root, filter_topic)
+
+        # Search for files
+        topic_path = search(root, filter_topic, ".pptx")
 
         # PowerPoint found
         if topic_path is not None:
@@ -123,9 +125,14 @@ def copy_to_folder(df, root, path):
             create_folder(inner_path)
             add_ppt(topic_path, inner_path, row["Topic"])
 
+            # Lesson plan
+            lp_path = search(root, filter_topic, ".docx")
+            # add_ppt(topic_path, inner_path, row["Topic"])
+            print(lp_path)
+
+
         # Can't locate PowerPoint
         else:
-            # print("HOHO", inner_path)
             inner_path = os.path.join(path, row["Teacher"], "MISSING " + topic)
             create_folder(inner_path)
             missing_slides(row["Teacher"], row["Topic"], time)
