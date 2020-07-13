@@ -5,7 +5,7 @@
 #
 # Created by Andrea Sha, Livy Xu, Shaun Soong, Will Mao
 #
-# Version 2.1 Beta (updated 10/7/2020)
+# Version 3.0 (updated 13/7/2020)
 
 import os
 import pandas as pd
@@ -27,6 +27,7 @@ df = pd.read_csv(airtable_csv)
 df = df.filter(items=["Teacher", "Topic", "Au time"])
 df = df.sort_values(by=["Teacher"])
 df = df.dropna()
+df = df[df.Teacher != "取消"]
 
 # remove CSV used
 # os.remove(airtable_csv)

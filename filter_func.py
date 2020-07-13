@@ -1,7 +1,7 @@
 ### Global Var ---------------
 
-non_allowed_char = [" ", "_", "-", "(", ")", "（", "）", ":", "~", ".pptx",
-                    "°Ø", "’", "©", "®", "£", "+", "+", "：", ": ", " ", " ", "?", "？"]
+non_allowed_char = ["_LP", " ", "_", "-", "(", ")", "（", "）", ":", "~",  " ", " ", "?", "？", "  ", " ",
+                    "°Ø", "’", "©", "®", "£", "+", "+", "：", ": "]
   
 n = [i for i in range(10)]
 m = n.copy()
@@ -14,6 +14,14 @@ for i in n:
 ### Functions ---------------
 
 
+def remove_error_char(word):
+
+    word = word.replace(":", "").replace("\\", "").replace("/", "").replace("\n", "")
+
+    return word
+
+
+# removes Version from name, ie V4.0 etc
 def vdetect(name):
     for i in range(4, len(name)):
         elem = name[i - 4: i]
@@ -22,6 +30,7 @@ def vdetect(name):
     return name
 
 
+# removes random numbers placed
 def numberdect(name):
     if name[0].isdigit():
         return numberdect(name[1:])
@@ -31,19 +40,26 @@ def numberdect(name):
         return name
 
 
+# standardise the syntax
 def sytaxdect(name):
     if name[-1] == '.':
         return name[:-1]
+
     name = name.upper()
     name = name.replace("COLOR", "COLOUR")
-    name = name.replace("  ", '')
-    name = name.replace(" ", '')
+
     return name
 
 
+# remove more random stuff
 def standardise(word):
+
+    word = numberdect(word)
 
     for i in non_allowed_char:
         word = word.replace(i, "")
+
+    word = vdetect(word)
+    word = sytaxdect(word)
 
     return word

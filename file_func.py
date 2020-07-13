@@ -2,37 +2,43 @@ import os
 import sys
 import shutil
 from directory_func import create_folder
-from filter_func import vdetect, numberdect, sytaxdect, standardise
+from filter_func import standardise, remove_error_char
+
 
 ### Functions ---------------
 
-
-def search(path, keyword, type):
+def search(path, keyword):
     content = os.listdir(path)
-    result = None  # if no file is found
+    result = [None, None]  # if no file is found
 
     for each in content:
 
         each_path = path + os.sep + each
 
         # remove all spaces and chinese characters
-        each = numberdect(each)
         each = standardise(each)
-        each = vdetect(each)
-        each = sytaxdect(each)
 
         # File or folder found, get directory path
-        # if keyword == each and not (each.endswith(".docx") or each.endswith(".doc")):
-        if keyword == each and each.endswith(type):
-            result = each_path
+        if keyword == each[:-5] or keyword == each[:-4]:
+            # pptx
+            if "PPTX" in each:
+                result[0] = each_path
+
+            # docx
+            elif "DOC" in each:
+                result[1] = each_path
+
+        # if both lesson plan and ppt is found
+        if result[0] != None and result[1] != None:
             return result
+
         # Recurse deeper into each folder
-        if os.path.isdir(each_path):
+        if os.path.isdir(each_path) and result[0] is None:
             # not redundant folders
             if each != "Previews" and each != "Demo体验课":
-                result = search(each_path, keyword, type)
+                result = search(each_path, keyword)
                 # File found, break all loops
-                if result is not None:
+                if result[0] != None or result[1] != None:
                     break
 
     return result
@@ -69,7 +75,6 @@ def missing_slides(teacher, topic, time):
 
 
 def copytree(src, dst, topic, symlinks=False, ignore=None):
-
     if not os.path.isdir(src) and src.endswith(".pptx"):
         temp = "\\" + topic + ".pptx"
         shutil.copy2(src, dst + temp)
@@ -85,11 +90,12 @@ def copytree(src, dst, topic, symlinks=False, ignore=None):
 
 
 def add_ppt(src, des, topic):
-    try:
-        copytree(src, des, topic)
 
-    except OSError:
-        print("\npotential error ->", des)
+    if src[0] is not None:
+        shutil.copy2(src[0], des + "\\" + topic + ".pptx")
+
+    if src[1] is not None:
+        shutil.copy2(src[1], des + "\\" + topic + ".docx")
 
 
 def copy_to_folder(df, root, path):
@@ -103,33 +109,24 @@ def copy_to_folder(df, root, path):
         print("=", end="")
 
         # Directory for sub folders
-        topic = row["Topic"].replace(":", "").replace("\\", "").replace("/", "").replace(";", "").replace('\n', '').replace('\t', '')
-        time = row["Au time"].replace(":", "").replace("\\", "").replace("/", "").replace(";", "")
+        topic = remove_error_char(row["Topic"])
+        time = remove_error_char(row["Au time"])
 
         # Teacher Directory
         inner_path = os.path.join(path, row["Teacher"], topic)
 
         # Filter all invalid chars, find all PowerPoint and Lesson Plan
-        filter_topic = numberdect(topic)
-        filter_topic = standardise(filter_topic)
-        filter_topic = vdetect(filter_topic)
-        filter_topic = sytaxdect(filter_topic)
+        filter_topic = standardise(topic)
 
         # Search for files
-        topic_path = search(root, filter_topic, ".pptx")
+        topic_path = search(root, filter_topic)
 
         # PowerPoint found
-        if topic_path is not None:
+        if topic_path[0] is not None:
 
             # Copy PowerPoints to each respecting teacher
             create_folder(inner_path)
-            add_ppt(topic_path, inner_path, row["Topic"])
-
-            # Lesson plan
-            lp_path = search(root, filter_topic, ".docx")
-            # add_ppt(topic_path, inner_path, row["Topic"])
-            print(lp_path)
-
+            add_ppt(topic_path, inner_path, topic)
 
         # Can't locate PowerPoint
         else:
@@ -138,4 +135,3 @@ def copy_to_folder(df, root, path):
             missing_slides(row["Teacher"], row["Topic"], time)
 
     print("\nProgram completed\n")
-
