@@ -25,13 +25,13 @@ def search(path, keyword):
                 result[0] = each_path
 
             # docx
-            elif "DOC" in each:
-                result[1] = each_path
-                result[2] = ".doc"
-
             elif "DOCX" in each:
                 result[1] = each_path
                 result[2] = ".docx"
+
+            elif "DOC" in each:
+                result[1] = each_path
+                result[2] = ".doc"
 
         # if both lesson plan and ppt is found
         if result[0] != None and result[1] != None:
