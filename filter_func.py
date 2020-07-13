@@ -1,7 +1,7 @@
 ### Global Var ---------------
 
 non_allowed_char = ["_LP", " ", "_", "-", "(", ")", "（", "）", ":", "~",  " ", " ", "?", "？", "  ", " ",
-                    "°Ø", "’", "©", "®", "£", "+", "+", "：", ": "]
+                    "°Ø", "’", "©", "®", "£", "+", "+", "：", ": ", "，", "。", "、"]
   
 n = [i for i in range(10)]
 m = n.copy()
@@ -16,7 +16,10 @@ for i in n:
 
 def remove_error_char(word):
 
-    word = word.replace(":", "").replace("\\", "").replace("/", "").replace("\n", "")
+    word = word.replace(":", "").replace("\\", "").replace("/", "").replace("\n", "").replace(" ", " ")
+
+    if word[len(word)-1] == " ":
+        word = word[:-1]
 
     return word
 

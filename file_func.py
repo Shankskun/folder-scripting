@@ -9,7 +9,7 @@ from filter_func import standardise, remove_error_char
 
 def search(path, keyword):
     content = os.listdir(path)
-    result = [None, None]  # if no file is found
+    result = [None, None, None]  # if no file is found
 
     for each in content:
 
@@ -27,6 +27,11 @@ def search(path, keyword):
             # docx
             elif "DOC" in each:
                 result[1] = each_path
+                result[2] = ".doc"
+
+            elif "DOCX" in each:
+                result[1] = each_path
+                result[2] = ".docx"
 
         # if both lesson plan and ppt is found
         if result[0] != None and result[1] != None:
@@ -91,11 +96,16 @@ def copytree(src, dst, topic, symlinks=False, ignore=None):
 
 def add_ppt(src, des, topic):
 
-    if src[0] is not None:
-        shutil.copy2(src[0], des + "\\" + topic + ".pptx")
+    try:
 
-    if src[1] is not None:
-        shutil.copy2(src[1], des + "\\" + topic + ".docx")
+        if src[0] is not None:
+            shutil.copy2(src[0], des + "\\" + topic + ".pptx")
+
+        if src[1] is not None:
+            shutil.copy2(src[1], des + "\\" + topic + src[2])
+
+    except:
+        print("error -->", des)
 
 
 def copy_to_folder(df, root, path):
