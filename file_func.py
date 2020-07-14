@@ -7,46 +7,29 @@ from filter_func import standardise, remove_error_char
 
 ### Functions ---------------
 
-def search(path, keyword):
+def build_dict(path):
     content = os.listdir(path)
-    result = [None, None, None]  # if no file is found
+    dict = {}
 
     for each in content:
 
+        print("=", end="")
         each_path = path + os.sep + each
 
         # remove all spaces and chinese characters
         each = standardise(each)
 
-        # File or folder found, get directory path
-        if keyword == each[:-5] or keyword == each[:-4]:
-            # pptx
-            if "PPTX" in each:
-                result[0] = each_path
-
-            # docx
-            elif "DOCX" in each:
-                result[1] = each_path
-                result[2] = ".docx"
-
-            elif "DOC" in each:
-                result[1] = each_path
-                result[2] = ".doc"
-
-        # if both lesson plan and ppt is found
-        if result[0] != None and result[1] != None:
-            return result
-
         # Recurse deeper into each folder
-        if os.path.isdir(each_path) and result[0] is None:
+        if os.path.isdir(each_path):
             # not redundant folders
             if each != "Previews" and each != "Demo体验课":
-                result = search(each_path, keyword)
-                # File found, break all loops
-                if result[0] != None or result[1] != None:
-                    break
+                temp_dict = build_dict(each_path)
+                dict.update(temp_dict)
+        # store file into dict
+        else:
+            dict[each] = each_path
 
-    return result
+    return dict
 
 
 def find_csv_filename(path_to_dir, suffix=".csv"):
@@ -79,30 +62,15 @@ def missing_slides(teacher, topic, time):
     f.close()
 
 
-def copytree(src, dst, topic, symlinks=False, ignore=None):
-    if not os.path.isdir(src) and src.endswith(".pptx"):
-        temp = "\\" + topic + ".pptx"
-        shutil.copy2(src, dst + temp)
-
-    else:
-        for item in os.listdir(src):
-            s = os.path.join(src, item)
-            d = os.path.join(dst, item)
-            if os.path.isdir(s):
-                shutil.copytree(s, d, symlinks, ignore)
-            else:
-                shutil.copy2(s, d)
-
-
 def add_ppt(src, des, topic):
 
     try:
 
         if src[0] is not None:
-            shutil.copy2(src[0], des + "\\" + topic + ".pptx")
+            shutil.copy2(src[0], des + "\\" + topic + src[1])
 
-        if src[1] is not None:
-            shutil.copy2(src[1], des + "\\" + topic + src[2])
+        if src[2] is not None:
+            shutil.copy2(src[2], des + "\\" + topic + src[3])
 
     except:
         print("error -->", des)
@@ -113,7 +81,11 @@ def copy_to_folder(df, root, path):
     if os.path.exists("missing_ppt.txt"):
         os.remove("missing_ppt.txt")
 
-    print("Loading in progress: ")
+    # create dictionary
+    print("Creating Dictionary: ")
+    ppt_dict = build_dict(root)
+
+    print("\n\nCopying Files: \n")
 
     for index, row in df.iterrows():
         print("=", end="")
@@ -128,20 +100,31 @@ def copy_to_folder(df, root, path):
         # Filter all invalid chars, find all PowerPoint and Lesson Plan
         filter_topic = standardise(topic)
 
-        # Search for files
-        topic_path = search(root, filter_topic)
+        # Find ppt and LP
+        src = [None, None, None, None]
 
-        # PowerPoint found
-        if topic_path[0] is not None:
+        if (filter_topic + ".PPTX") in ppt_dict.keys():
+            # PowerPoint
+            src[0] = ppt_dict[filter_topic + ".PPTX"]
+            src[1] = ".pptx"
 
-            # Copy PowerPoints to each respecting teacher
+            # Word
+            if (filter_topic + ".DOC") in ppt_dict.keys():
+                src[2] = ppt_dict[filter_topic + ".DOC"]
+                src[3] = ".doc"
+            elif (filter_topic + ".DOCX") in ppt_dict.keys():
+                src[2] = ppt_dict[filter_topic + ".DOCX"]
+                src[3] = ".docx"
+
+        # Put in folder
+        if src[0] is not None:
             create_folder(inner_path)
-            add_ppt(topic_path, inner_path, topic)
-
-        # Can't locate PowerPoint
+            add_ppt(src, inner_path, topic)
+        # cant find file
         else:
             inner_path = os.path.join(path, row["Teacher"], "MISSING " + topic)
             create_folder(inner_path)
             missing_slides(row["Teacher"], row["Topic"], time)
 
+    del ppt_dict
     print("\nProgram completed\n")

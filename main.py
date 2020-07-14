@@ -5,7 +5,7 @@
 #
 # Created by Andrea Sha, Livy Xu, Shaun Soong, Will Mao
 #
-# Version 3.0 (updated 13/7/2020)
+# Version 4.0 (updated 14/7/2020)
 
 import os
 import pandas as pd
