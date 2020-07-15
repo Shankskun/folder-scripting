@@ -70,7 +70,7 @@ def add_ppt(src, des, topic):
             shutil.copy2(src[0], des + "\\" + topic + src[1])
 
         if src[2] is not None:
-            shutil.copy2(src[2], des + "\\" + topic + src[3])
+            shutil.copy2(src[2], des + "\\" + topic + "_LP" + src[3])
 
     except:
         print("error -->", des)
