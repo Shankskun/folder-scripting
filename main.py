@@ -18,7 +18,7 @@ from file_func import check_csv, copy_to_folder
 
 # Read Airtable CSV, filter irrelevant columns
 code_path= "C:\\Users\\shaunsoong\\Documents\\GitHub\\folder-scripting"     # Code & CSV
-src_path = "\\\\10.0.99.99\\ppt\\0 标准化课件\\2. inclass"      # PowerPoint Source
+src_path = "\\\\10.0.99.99\\ppt\\3. 标准化课件\\2. inclass"      # PowerPoint Source
 des_path = "\\\\10.0.99.99\\ppt\\Presentation\\000Daily folders"   # Daily Folder
 des_path = "C:\\Users\\shaunsoong\\Desktop\\Test"   # Daily Folder
 
