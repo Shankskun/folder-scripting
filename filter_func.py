@@ -26,30 +26,36 @@ def remove_error_char(word):
 
 # removes Version from name, ie V4.0 etc
 def vdetect(name):
-    for i in range(4, len(name)):
-        elem = name[i - 4: i]
-        if elem in lst:
-            name = name[:i - 4] + name[i:]
+
+    if len(name) > 0:
+        for i in range(4, len(name)):
+            elem = name[i - 4: i]
+            if elem in lst:
+                name = name[:i - 4] + name[i:]
     return name
 
 
 # removes random numbers placed
 def numberdect(name):
-    if name[0].isdigit():
-        return numberdect(name[1:])
-    elif name[:4] == "JNCE":
-        return numberdect(name[4:])
-    else:
-        return name
+    if len(name) > 0:
+        if name[0].isdigit():
+            return numberdect(name[1:])
+        elif name[:4] == "JNCE":
+            return numberdect(name[4:])
+        else:
+            return name
+    return name
 
 
 # standardise the syntax
 def sytaxdect(name):
-    if name[-1] == '.':
-        return name[:-1]
+    if len(name) > 0:
 
-    name = name.upper()
-    name = name.replace("COLOR", "COLOUR")
+        if name[-1] == '.':
+            return name[:-1]
+
+        name = name.upper()
+        name = name.replace("COLOR", "COLOUR")
 
     return name
 
