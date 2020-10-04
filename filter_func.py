@@ -1,37 +1,48 @@
 ### Global Var ---------------
 
-non_allowed_char = ["_LP", " ", "_", "-", "(", ")", "（", "）", ":", "~",  " ", " ", "?", "？", "  ", " ",
-                    "°Ø", "’", "©", "®", "£", "+", "+", "：", ": ", "，", "。", "、"]
-  
+non_allowed_char = ["_LP", " ", "_", "-", "(", ")", "（", "）", ":", "~", "'", "“", "”", "‘", "’", " ", ".", "?",
+                    "？", "  ", " ", "°Ø", "’", "©", "®", "£", "+", "+", "：", ": ", "，", "。", "、", ",",'"']
+
 n = [i for i in range(10)]
 m = n.copy()
 lst = []
-for i in n:
-    for j in m:
-        lst.append(f'V{i}.{j}')
+for x in n:
+    lst.append(f'V{x}')
+    lst.append(f'V.{x}')
+    for y in m:
+        lst.append(f'V{x}.{y}')
 
 
 ### Functions ---------------
 
 
 def remove_error_char(word):
-
-    word = word.replace(":", "").replace("\\", "").replace("/", "").replace("\n", "").replace(" ", " ")
-
-    if word[len(word)-1] == " ":
+    word = word.replace(":", "").replace("/", "").replace("\n", "").replace(" ", "")
+    word = word.replace("\\", "")
+    if word[len(word) - 1] == " ":
         word = word[:-1]
 
     return word
 
 
-# removes Version from name, ie V4.0 etc
+# removes Version from name, ie V4.0  or V4 etc
 def vdetect(name):
-
-    if len(name) > 0:
-        for i in range(4, len(name)):
+    if name:
+        for i in range(4, len(name) + 1):
             elem = name[i - 4: i]
             if elem in lst:
                 name = name[:i - 4] + name[i:]
+                return name
+        for i in range(3, len(name) + 1):
+            elem = name[i - 3: i]
+            if elem in lst:
+                name = name[:i - 3] + name[i:]
+                return name
+        for i in range(2, len(name) + 1):
+            elem = name[i - 2: i]
+            if elem in lst:
+                name = name[:i - 2] + name[i:]
+                return name
     return name
 
 
@@ -62,7 +73,6 @@ def sytaxdect(name):
 
 # remove more random stuff
 def standardise(word):
-
     word = numberdect(word)
 
     for i in non_allowed_char:
@@ -70,5 +80,5 @@ def standardise(word):
 
     word = vdetect(word)
     word = sytaxdect(word)
-
+    # print(word)
     return word
