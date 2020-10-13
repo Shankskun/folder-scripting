@@ -6,27 +6,30 @@ from filter_func import standardise, remove_error_char
 
 
 ### Functions ---------------
-
+i = 0
 def build_dict(path):
     content = os.listdir(path)
     dict = {}
-
+    global i
     for each in content:
+        i += 1
+        if i >= 79:
+            print('\n')
+            i = 0
 
         print("=", end="")
         each_path = path + os.sep + each
-                
-        # dont read redundant folders
-        if each != "4.live" and each != "5.preview" and each != "6.opening class" and each != "7.topics":
 
         # remove all spaces and chinese characters
         each = standardise(each)
+        each = each.replace(".", "")
 
         # Recurse deeper into each folder
         if os.path.isdir(each_path):
-            temp_dict = build_dict(each_path)
-            dict.update(temp_dict)
-            
+            # not redundant folders
+            if each != "Previews" and each != "Demo体验课":
+                temp_dict = build_dict(each_path)
+                dict.update(temp_dict)
         # store file into dict
         else:
             dict[each] = each_path
@@ -69,24 +72,36 @@ def add_ppt(src, des, topic):
     try:
 
         if src[0] is not None:
-            shutil.copy2(src[0], des + "\\")
+            shutil.copy2(src[0], des + "/")
 
         if src[2] is not None:
-            shutil.copy2(src[2], des + "\\" + topic + "_LP" + src[3])
+            shutil.copy2(src[2], des + "/" + topic + "_LP" + src[3])
 
     except:
         print("error -->", des)
 
-
-def copy_to_folder(df, path, ppt_dict):
+i = 0
+def copy_to_folder(df, root, path):
     # Remove missing_ppt.txt if present
     if os.path.exists("missing_ppt.txt"):
         os.remove("missing_ppt.txt")
 
+    # create dictionary
+    print("Creating Dictionary: ")
+    ppt_dict = build_dict(root)
+
     print("\n\nCopying Files: \n")
 
+    global i
     for index, row in df.iterrows():
         print("=", end="")
+        i += 1
+        if i >= 79:
+            print('\n')
+            i = 0
+        # Directory for sub folders
+        topic = remove_error_char(row["Topic"])
+        time = remove_error_char(row["Au time"])
 
         # Teacher Directory
         inner_path = os.path.join(path, row["Teacher"], topic)
@@ -97,16 +112,16 @@ def copy_to_folder(df, path, ppt_dict):
         # Find ppt and LP
         src = [None, None, None, None]
 
-        if (filter_topic + "PPTX") in ppt_dict.keys():
+        if (filter_topic.replace(".", "") + "PPTX") in ppt_dict.keys():
             # PowerPoint
             src[0] = ppt_dict[filter_topic + "PPTX"]
             src[1] = ".pptx"
 
             # Word
-            if (filter_topic + "DOC") in ppt_dict.keys():
+            if (filter_topic.replace(".", "") + "DOC") in ppt_dict.keys():
                 src[2] = ppt_dict[filter_topic + "DOC"]
                 src[3] = ".doc"
-            elif (filter_topic + "DOCX") in ppt_dict.keys():
+            elif (filter_topic.replace(".", "") + "DOCX") in ppt_dict.keys():
                 src[2] = ppt_dict[filter_topic + "DOCX"]
                 src[3] = ".docx"
 
@@ -120,37 +135,5 @@ def copy_to_folder(df, path, ppt_dict):
             create_folder(inner_path)
             missing_slides(row["Teacher"], row["Topic"], time)
 
+    del ppt_dict
     print("\nProgram completed\n")
-    
-
-def choose_dict(x, csv_file, path):
-# reuse dictionary
-if x:
-    print("Reusing Dictionary: ")
-    reader = csv.reader(open(csv_file))
-    ppt_dict = {}
-
-    for row in reader:
-        key = row[0]
-        if key in ppt_dict:
-            # implement your duplicate row handling here
-            pass
-        ppt_dict[key] = row[1:]
-
-# built dictionary
-else:
-    print("Creating Dictionary: ")
-    ppt_dict = build_dict(path)
-
-    # delete old dictionary if exist
-    if os.path.exists("dictionary.csv"):
-        os.remove("dictionary.csv")
-
-    # save to csv
-    w = open("dictionary.csv", "w")
-    w.close()
-    w = csv.writer(open("dictionary.csv", "w"))
-    for key, val in ppt_dict.items():
-        w.writerow([key, val])
-
-return ppt_dict
