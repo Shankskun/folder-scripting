@@ -76,23 +76,15 @@ def add_ppt(src, des, topic):
         print("error -->", des)
 
 
-def copy_to_folder(df, root, path):
+def copy_to_folder(df, path, ppt_dict):
     # Remove missing_ppt.txt if present
     if os.path.exists("missing_ppt.txt"):
         os.remove("missing_ppt.txt")
-
-    # create dictionary
-    print("Creating Dictionary: ")
-    ppt_dict = build_dict(root)
 
     print("\n\nCopying Files: \n")
 
     for index, row in df.iterrows():
         print("=", end="")
-
-        # Directory for sub folders
-        topic = remove_error_char(row["Topic"])
-        time = remove_error_char(row["Au time"])
 
         # Teacher Directory
         inner_path = os.path.join(path, row["Teacher"], topic)
@@ -103,17 +95,17 @@ def copy_to_folder(df, root, path):
         # Find ppt and LP
         src = [None, None, None, None]
 
-        if (filter_topic + ".PPTX") in ppt_dict.keys():
+        if (filter_topic + "PPTX") in ppt_dict.keys():
             # PowerPoint
-            src[0] = ppt_dict[filter_topic + ".PPTX"]
+            src[0] = ppt_dict[filter_topic + "PPTX"]
             src[1] = ".pptx"
 
             # Word
-            if (filter_topic + ".DOC") in ppt_dict.keys():
-                src[2] = ppt_dict[filter_topic + ".DOC"]
+            if (filter_topic + "DOC") in ppt_dict.keys():
+                src[2] = ppt_dict[filter_topic + "DOC"]
                 src[3] = ".doc"
-            elif (filter_topic + ".DOCX") in ppt_dict.keys():
-                src[2] = ppt_dict[filter_topic + ".DOCX"]
+            elif (filter_topic + "DOCX") in ppt_dict.keys():
+                src[2] = ppt_dict[filter_topic + "DOCX"]
                 src[3] = ".docx"
 
         # Put in folder
@@ -126,5 +118,4 @@ def copy_to_folder(df, root, path):
             create_folder(inner_path)
             missing_slides(row["Teacher"], row["Topic"], time)
 
-    del ppt_dict
     print("\nProgram completed\n")
