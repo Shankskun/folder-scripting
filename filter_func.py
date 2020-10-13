@@ -73,11 +73,11 @@ def sytaxdect(name):
 
 # remove more random stuff
 def standardise(word):
-    word = numberdect(word)
 
     for i in non_allowed_char:
         word = word.replace(i, "")
-
+        
+    word = numberdect(word)
     word = vdetect(word)
     word = sytaxdect(word)
     # print(word)
