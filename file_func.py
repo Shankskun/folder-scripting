@@ -121,3 +121,36 @@ def copy_to_folder(df, path, ppt_dict):
             missing_slides(row["Teacher"], row["Topic"], time)
 
     print("\nProgram completed\n")
+    
+
+def choose_dict(x, csv_file, path):
+# reuse dictionary
+if x:
+    print("Reusing Dictionary: ")
+    reader = csv.reader(open(csv_file))
+    ppt_dict = {}
+
+    for row in reader:
+        key = row[0]
+        if key in ppt_dict:
+            # implement your duplicate row handling here
+            pass
+        ppt_dict[key] = row[1:]
+
+# built dictionary
+else:
+    print("Creating Dictionary: ")
+    ppt_dict = build_dict(path)
+
+    # delete old dictionary if exist
+    if os.path.exists("dictionary.csv"):
+        os.remove("dictionary.csv")
+
+    # save to csv
+    w = open("dictionary.csv", "w")
+    w.close()
+    w = csv.writer(open("dictionary.csv", "w"))
+    for key, val in ppt_dict.items():
+        w.writerow([key, val])
+
+return ppt_dict
