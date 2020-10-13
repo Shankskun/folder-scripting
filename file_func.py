@@ -15,16 +15,18 @@ def build_dict(path):
 
         print("=", end="")
         each_path = path + os.sep + each
+                
+        # dont read redundant folders
+        if each != "4.live" and each != "5.preview" and each != "6.opening class" and each != "7.topics":
 
         # remove all spaces and chinese characters
         each = standardise(each)
 
         # Recurse deeper into each folder
         if os.path.isdir(each_path):
-            # not redundant folders
-            if each != "Previews" and each != "Demo体验课":
-                temp_dict = build_dict(each_path)
-                dict.update(temp_dict)
+            temp_dict = build_dict(each_path)
+            dict.update(temp_dict)
+            
         # store file into dict
         else:
             dict[each] = each_path
