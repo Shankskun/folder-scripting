@@ -12,13 +12,13 @@ import pandas as pd
 
 # Custom Functions
 from directory_func import create_folder, create_directories, folder_day, get_teachers
-from file_func import check_csv, copy_to_folder
+from file_func import check_csv, copy_to_folder, choose_dict
 
 ### Main ---------------
 
 # Read Airtable CSV, filter irrelevant columns
 code_path= "C:\\Users\\shaunsoong\\Documents\\GitHub\\folder-scripting"     # Code & CSV
-src_path = "\\\\10.0.99.99\\ppt\\2.标准化课件\\2.inclass"      # PowerPoint Source
+src_path = "\\\\10.0.99.99\\ppt\\2.标准化课件"      # PowerPoint Source
 des_path = "\\\\10.0.99.99\\ppt\\Presentation\\000Daily folders"   # Daily Folder
 des_path = "C:\\Users\\shaunsoong\\Desktop\\Test"   # Daily Folder
 
@@ -42,9 +42,13 @@ whichDay = input("press [ENTER] for TODAY, or type in the day (ie '23' for 23-mo
 day = folder_day(whichDay)
 create_folder(day)
 
+# Make or reuse Dictionary
+os.chdir(code_path)
+reuse = input("Do you want to reuse dictionary? (press any key for YES, enter for NO")
+ppt_dict = choose_dict(reuse, 'dictionary.csv', src_path)
+
 # Make teacher folders
 teachers = get_teachers(df)
-
 daily_folder_path = des_path + "\\" + day
 os.chdir(daily_folder_path)
 create_directories(teachers)
