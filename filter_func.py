@@ -1,7 +1,7 @@
 ### Global Var ---------------
 
 non_allowed_char = ["_LP", " ", "_", "-", "(", ")", "（", "）", ":", "~", "'", "“", "”", "‘", "’", " ", ".", "?",
-                    "？", "  ", " ", "°Ø", "’", "©", "®", "£", "+", "+", "：", ": ", "，", "。", "、", ",",'"']
+                    "？", "  ", " ", "°Ø", "’", "©", "®", "£", "+", "+", "：", ": ", "，", "。", "、", ","]
 
 n = [i for i in range(10)]
 m = n.copy()
@@ -17,7 +17,7 @@ for x in n:
 
 
 def remove_error_char(word):
-    word = word.replace(":", "").replace("/", "").replace("\n", "").replace(" ", "")
+    word = word.replace(":", "").replace("/", "").replace("\n", "").replace(" ", "").replace('"', '')
     word = word.replace("\\", "")
     if word[len(word) - 1] == " ":
         word = word[:-1]
@@ -76,9 +76,10 @@ def standardise(word):
 
     for i in non_allowed_char:
         word = word.replace(i, "")
-        
+
     word = numberdect(word)
     word = vdetect(word)
     word = sytaxdect(word)
-    # print(word)
+    word = word.replace('"', '')
+
     return word

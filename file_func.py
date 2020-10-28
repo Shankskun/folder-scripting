@@ -1,6 +1,7 @@
 import os
 import sys
 import shutil
+import csv
 from directory_func import create_folder
 from filter_func import standardise, remove_error_char
 
@@ -8,8 +9,11 @@ from filter_func import standardise, remove_error_char
 ### Functions ---------------
 i = 0
 def build_dict(path):
+
+    os.chdir(path)
     content = os.listdir(path)
     dict = {}
+
     global i
     for each in content:
         i += 1
@@ -20,19 +24,20 @@ def build_dict(path):
         print("=", end="")
         each_path = path + os.sep + each
 
-        # remove all spaces and chinese characters
-        each = standardise(each)
-        each = each.replace(".", "")
+        # dont read redundant folders
+        if each != "4.live" and each != "5.preview" and each != "6.opening class" and each != "7.topics" and each != "7.Wonderful Minds_Ssuting":
 
-        # Recurse deeper into each folder
-        if os.path.isdir(each_path):
-            # not redundant folders
-            if each != "Previews" and each != "Demo体验课":
+            # remove all spaces and chinese characters
+            each = standardise(each)
+
+            # Recurse deeper into each folder
+            if os.path.isdir(each_path):
                 temp_dict = build_dict(each_path)
                 dict.update(temp_dict)
-        # store file into dict
-        else:
-            dict[each] = each_path
+
+            # store file into dict
+            else:
+                dict[each] = each_path
 
     return dict
 
@@ -47,6 +52,10 @@ def check_csv(path):
 
     # find the only CSV file within the directory
     if result:
+
+        if "dictionary.csv" in result:
+            result.remove("dictionary.csv")
+
         return result[0]
 
     print("No CSV found, please place one in this folder")
@@ -72,23 +81,58 @@ def add_ppt(src, des, topic):
     try:
 
         if src[0] is not None:
-            shutil.copy2(src[0], des + "/")
+            shutil.copy2(src[0], des + "\\")
 
         if src[2] is not None:
-            shutil.copy2(src[2], des + "/" + topic + "_LP" + src[3])
+            shutil.copy2(src[2], des + "\\" + topic + "_LP" + src[3])
 
     except:
-        print("error -->", des)
+        print("error can't copy from -->", des)
+
+def choose_dict(x, csv_file, path, root):
+    # reuse dictionary
+    if x:
+        print("Reusing Dictionary: ")
+        reader = csv.reader(open(csv_file, encoding="utf-8"))
+        ppt_dict = {}
+
+        for row in reader:
+            print(row)
+            key = row[0]
+            if key in ppt_dict:
+                # implement your duplicate row handling here
+                pass
+            ppt_dict[key] = row[1:]
+
+    # built dictionary
+    else:
+        print("Creating Dictionary: ")
+        ppt_dict = build_dict(path)
+
+        # delete old dictionary if exist
+        os.chdir(root)
+        if os.path.exists(csv_file):
+            os.remove(csv_file)
+
+        # save to csv
+        w = open(csv_file, "w")
+        w.close()
+        w = csv.writer(open(csv_file, "w", encoding="utf-8"))
+        for key, val in ppt_dict.items():
+            w.writerow([key, val])
+
+    return ppt_dict
+
 
 i = 0
-def copy_to_folder(df, root, path):
+def copy_to_folder(df, path, ppt_dict):
     # Remove missing_ppt.txt if present
     if os.path.exists("missing_ppt.txt"):
         os.remove("missing_ppt.txt")
 
-    # create dictionary
-    print("Creating Dictionary: ")
-    ppt_dict = build_dict(root)
+    # # create dictionary
+    # print("Creating Dictionary: ")
+    # ppt_dict = build_dict(root)
 
     print("\n\nCopying Files: \n")
 
@@ -135,5 +179,4 @@ def copy_to_folder(df, root, path):
             create_folder(inner_path)
             missing_slides(row["Teacher"], row["Topic"], time)
 
-    del ppt_dict
     print("\nProgram completed\n")
