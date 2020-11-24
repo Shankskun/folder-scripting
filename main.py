@@ -50,7 +50,7 @@ for index, row in df.iterrows():
         second = second.replace('"', '')
 
         # topic code that matches
-        if first[:2] == second[:2]:
+        if first[:2] == second[:2] or second[:2] == "AC":
 
             # drop current row
             index_to_drop.append(index)
