@@ -17,10 +17,10 @@ from file_func import check_csv, copy_to_folder, choose_dict
 ### Main ---------------
 
 # Read Airtable CSV, filter irrelevant columns
-code_path= "C:\\Users\\shaunsoong\\Documents\\GitHub\\folder-scripting"     # Code & CSV
+code_path= "C:\\Users\\Marsha\\Documents\\GitHub\\folder-scripting"     # Code & CSV
 
 src_path = "\\\\10.0.99.99\\PPT\\2.标准化课件 Standardized Courseware"      # PowerPoint Source
-des_path = "\\\\10.0.99.99\\PPT\\Presentation\\000Daily folders"   # Daily Folder
+des_path = "\\\\10.0.99.99\\PPT\\Presentation\\000Daily folders\\Tomorrow"   # Daily Folder
 
 airtable_csv = check_csv(code_path)
 df = pd.read_csv(airtable_csv)
@@ -38,6 +38,10 @@ for index, row in df.iterrows():
         # 2 of the same type of topics should have similar lengths
         topic = row["Topic"]
         length = int(len(topic)/2 - 5)
+
+        # if there is only 1 topic in a array (skip)
+        if len(topic[length:].split(",", 1)) == 1:
+            continue
 
         # split from the mid point of the string
         second = topic[length:].split(",", 1)[1]
