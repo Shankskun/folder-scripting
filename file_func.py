@@ -25,7 +25,11 @@ def build_dict(path):
         each_path = path + os.sep + each
 
         # dont read redundant folders
-        if each != "4.live" and each != "5.preview" and each != "6.opening class" and each != "7.topics" and each != "7.Wonderful Minds_Ssuting":
+        if each != "4.live" and each != "5.preview" \
+                and each != "6.opening class" \
+                and each != "7.topics" \
+                and each != "7.Wonderful Minds_Ssuting"\
+                and each != "恢复":
 
             # remove all spaces and chinese characters
             each = standardise(each)

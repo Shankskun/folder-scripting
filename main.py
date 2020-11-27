@@ -70,7 +70,7 @@ df = df.drop(index_to_drop)
 df = df.sort_values(by=["Teacher"])
 df = df.reset_index(drop=True)
 
-# os.remove(airtable_csv)
+os.remove(airtable_csv)
 
 # Daily Folder Location
 os.chdir(des_path)
