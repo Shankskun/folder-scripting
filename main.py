@@ -24,7 +24,7 @@ des_path = "\\\\10.0.99.99\\PPT\\Presentation\\000Daily folders\\Tomorrow"   # D
 
 airtable_csv = check_csv(code_path)
 df = pd.read_csv(airtable_csv)
-df = df.filter(items=["Teacher", "Topic", "Au time"])
+df = df.filter(items=["Teacher", "Topic", "Melbourne Time"])
 df = df.dropna()
 df = df[df.Teacher != "取消"]
 df = df[df.Teacher != "取消不计课时"]
@@ -61,7 +61,7 @@ for index, row in df.iterrows():
             # append new row into df
             new_df = pd.DataFrame({"Teacher": [row["Teacher"], row["Teacher"]],
                                    "Topic": [first, second],
-                                   "Au time": [row["Au time"], row["Au time"]]})
+                                   "Melbourne Time": [row["Melbourne Time"], row["Melbourne Time"]]})
             df = df.append(new_df, ignore_index=True)
 
 df = df.drop(index_to_drop)
@@ -70,7 +70,7 @@ df = df.drop(index_to_drop)
 df = df.sort_values(by=["Teacher"])
 df = df.reset_index(drop=True)
 
-os.remove(airtable_csv)
+# os.remove(airtable_csv)
 
 # Daily Folder Location
 os.chdir(des_path)

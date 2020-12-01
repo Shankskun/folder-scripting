@@ -149,7 +149,7 @@ def copy_to_folder(df, path, ppt_dict):
             i = 0
         # Directory for sub folders
         topic = remove_error_char(row["Topic"])
-        time = remove_error_char(row["Au time"])
+        time = remove_error_char(row["Melbourne Time"])
 
         # Teacher Directory
         inner_path = os.path.join(path, row["Teacher"], topic)
