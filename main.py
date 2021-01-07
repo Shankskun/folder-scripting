@@ -20,7 +20,7 @@ from file_func import check_csv, copy_to_folder, choose_dict
 code_path= "C:\\Users\\Marsha\\Documents\\GitHub\\folder-scripting"     # Code & CSV
 
 src_path = "\\\\10.0.99.99\\PPT\\2.标准化课件 Standardized Courseware"      # PowerPoint Source
-des_path = "\\\\10.0.99.99\\PPT\\Presentation\\000Daily folders\\Tomorrow"   # Daily Folder
+des_path = "\\\\10.0.99.99\\PPT\\Presentation\\000Daily folders\\Next Few Days"   # Daily Folder
 
 airtable_csv = check_csv(code_path)
 df = pd.read_csv(airtable_csv)
@@ -64,13 +64,14 @@ for index, row in df.iterrows():
                                    "Melbourne Time": [row["Melbourne Time"], row["Melbourne Time"]]})
             df = df.append(new_df, ignore_index=True)
 
-df = df.drop(index_to_drop)
+# ISSUE HERE, TODO
+# df = df.drop(index_to_drop)
 
 # sort by teacher
 df = df.sort_values(by=["Teacher"])
 df = df.reset_index(drop=True)
 
-# os.remove(airtable_csv)
+os.remove(airtable_csv)
 
 # Daily Folder Location
 os.chdir(des_path)

@@ -152,7 +152,7 @@ def copy_to_folder(df, path, ppt_dict):
         time = remove_error_char(row["Melbourne Time"])
 
         # Teacher Directory
-        inner_path = os.path.join(path, row["Teacher"], topic)
+        inner_path = os.path.join(path, row["Teacher"], time + " " + topic)
 
         # Filter all invalid chars, find all PowerPoint and Lesson Plan
         filter_topic = standardise(topic)
